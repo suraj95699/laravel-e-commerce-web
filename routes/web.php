@@ -19,3 +19,4 @@ Route::get('/',function(){
 Route::get('/view',function(){
     return view("admin.app");
 });
+Route::view('/admin', 'admin.dashboard.index');
