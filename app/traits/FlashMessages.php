@@ -7,7 +7,7 @@ namespace App\Traits;
  * @package App\Traits
  */
 trait FlashMessages
-{
+{ 
     /**
      * @var array
      */

@@ -31,7 +31,7 @@ class RedirectIfAuthenticated
         switch ($guards[0]) {
             case 'admin':
                 if (Auth::guard($guards[0])->check()) {
-                    return redirect('/admin');
+                    return redirect('/admin/dashboard');
                 }
                 break;
             default:

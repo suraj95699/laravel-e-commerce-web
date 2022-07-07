@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
-
 class Setting extends Model
 {
     use HasFactory;
@@ -42,8 +41,11 @@ class Setting extends Model
      */
     public static function set($key, $value = null)
     {
+         
         $setting = new self();
+        // DD($setting);
         $entry = $setting->where('key', $key)->firstOrFail();
+       
         $entry->value = $value;
         $entry->saveOrFail();
         Config::set('key', $value);

@@ -40,6 +40,12 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
+    public function dashboardView()
+    {
+
+        return view('admin.dashboard.index');
+    }
+    
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -56,7 +62,7 @@ class LoginController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ], $request->get('remember'))) {
-            return redirect("admin");
+            return redirect("admin/dashboard");
         }
         return back()->withInput($request->only('email', 'remember'));
     }
