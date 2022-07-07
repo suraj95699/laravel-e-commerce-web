@@ -31,6 +31,16 @@ class LoginController extends Controller
         $this->middleware('guest:admin')->except('logout');
     }
 
+
+
+    public function index()
+    {
+        
+        return view('admin.dashboard.index', compact('categories'));
+        
+    }
+
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
