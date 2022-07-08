@@ -35,9 +35,8 @@ class LoginController extends Controller
 
     public function index()
     {
-        
-        return view('admin.dashboard.index', compact('categories'));
-        
+
+        return view('admin.dashboard.index');
     }
 
 
@@ -50,12 +49,8 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
-    public function dashboardView()
-    {
 
-        return view('admin.dashboard.index');
-    }
-    
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
