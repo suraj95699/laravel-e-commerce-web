@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attribute extends Model
 {
     use HasFactory;
-     /**
+    /**
      * @var string
      */
     protected $table = 'attributes';
@@ -27,4 +27,13 @@ class Attribute extends Model
         'is_filterable' =>  'boolean',
         'is_required'   =>  'boolean',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Adding Relationship to Attributes and Attribute Values
+     */
+    public function values()
+    {
+        return $this->hasMany(AttributeValue::class);
+    }
 }
