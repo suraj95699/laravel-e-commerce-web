@@ -7,19 +7,20 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 
+
+Route::redirect("/","admin/login");
 Route::group(['prefix'  =>  'admin'], function () {
 
 
 
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+
     Route::post('login', [LoginController::class, 'login'])->name('admin.login.post');
     Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
 
     Route::group(['middleware' => ['auth:admin']], function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard.index');
-        });
-        Route::get('/', [LoginController::class, 'index'])->name('admin.dashboard');
+        Route::get("/",function(){return view("admin.dashboard.index");})->name("admin.dashboard");;
+        Route::get("/dashboard",function(){return view("admin.dashboard.index");})->name("admin.dashboard");;
         Route::get('settings', [SettingController::class, 'index'])->name('admin.settings');
         Route::post('settings', [SettingController::class, 'update'])->name('admin.settings.update');
 
