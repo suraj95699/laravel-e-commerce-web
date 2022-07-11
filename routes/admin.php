@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductImageController;
 
 
 Route::redirect("/", "admin/login");
@@ -69,6 +70,9 @@ Route::group(['prefix'  =>  'admin'], function () {
             Route::post('/store', [ProductController::class, 'store'])->name('admin.products.store');
             Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
             Route::post('/update', [ProductController::class, 'update'])->name('admin.products.update');
+
+            Route::post('/images/upload', [ProductImageController::class, 'upload'])->name('admin.products.images.upload');
+            Route::get('/images/{id}/delete', [ProductImageController::class, 'delete'])->name('admin.products.images.delete');
         });
     });
 });

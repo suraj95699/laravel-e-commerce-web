@@ -1,6 +1,12 @@
 @extends('admin.app')
 @section('title') {{ $pageTitle }} @endsection
-=@section('content')
+@section('styles')
+<!-- <link rel="stylesheet" type="text/css" href="{{ asset('backend/js/plugins/dropzone/dist/min/dropzone.min.css') }}" /> -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/basic.min.css" integrity="sha512-MeagJSJBgWB9n+Sggsr/vKMRFJWs+OUphiDV7TJiYu+TNQD9RtVJaPDYP8hA/PAjwRnkdvU+NsTncYTKlltgiw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/dropzone.min.css" integrity="sha512-qkeymXyips4Xo5rbFhX+IDuWMDEmSn7Qo7KpPMmZ1BmuIA95IPVYsVZNn8n4NH/N30EY7PUZS3gTeTPoAGo1mA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@endsection
+
+@section('content')
 <div class="app-title">
     <div>
         <h1><i class="fa fa-shopping-bag"></i> {{ $pageTitle }} - {{ $subTitle }}</h1>
@@ -12,11 +18,14 @@
         <div class="tile p-0">
             <ul class="nav flex-column nav-tabs user-tabs">
                 <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
+                <li class="nav-item"><a class="nav-link" href="#images" data-toggle="tab">Images</a></li>
             </ul>
         </div>
     </div>
     <div class="col-md-9">
         <div class="tab-content">
+
+
             <div class="tab-pane active" id="general">
                 <div class="tile">
                     <form action="{{ route('admin.products.update') }}" method="POST" role="form">
@@ -138,15 +147,102 @@
                     </form>
                 </div>
             </div>
+
+
+            <!-- Starts of image section -->
+            <div class="tab-pane" id="images">
+                <div class="tile">
+                    <h3 class="tile-title">Upload Image</h3>
+                    <hr>
+                    <div class="tile-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form action="" class="dropzone" id="dropzone" style="border: 2px dashed rgba(0,0,0,0.3)">
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    {{ csrf_field() }}
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row d-print-none mt-2">
+                            <div class="col-12 text-right">
+                                <button class="btn btn-success" type="button" id="uploadButton">
+                                    <i class="fa fa-fw fa-lg fa-upload"></i>Upload Images
+                                </button>
+                            </div>
+                        </div>
+                        @if ($product->images)
+                        <hr>
+                        <div class="row">
+                            @foreach($product->images as $image)
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img src="{{ asset('storage/'.$image->full) }}" id="brandLogo" class="img-fluid" alt="img">
+                                        <a class="card-link float-right text-danger" href="{{ route('admin.products.images.delete', $image->id) }}">
+                                            <i class="fa fa-fw fa-lg fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <!-- end of image section -->
         </div>
     </div>
 </div>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('backend/js/plugins/select2.min.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ asset('backend/js/plugins/dropzone/dist/min/dropzone.min.js') }}"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/dropzone-min.js" integrity="sha512-FFyHlfr2vLvm0wwfHTNluDFFhHaorucvwbpr0sZYmxciUj3NoW1lYpveAQcx2B+MnbXbSrRasqp43ldP9BKJcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="{{ asset('backend/js/plugins/bootstrap-notify.min.js') }}"></script>
 <script>
     $(document).ready(function() {
+        Dropzone.autoDiscover = false;
         $('#categories').select2();
+
+        let myDropzone = new Dropzone("#dropzone", {
+            paramName: "image",
+            addRemoveLinks: false,
+            maxFilesize: 100, //byte
+            parallelUploads: 20,
+            uploadMultiple: false,
+            url: "{{ route('admin.products.images.upload') }}",
+            autoProcessQueue: false,
+        });
+        myDropzone.on("queuecomplete", function(file) {
+            window.location.reload();
+            showNotification('Completed', 'All product images uploaded', 'success', 'fa-check');
+        });
+
+        $('#uploadButton').click(function() {
+            if (myDropzone.files.length === 0) {
+                showNotification('Error', 'Please select files to upload.', 'danger', 'fa-close');
+            } else {
+                myDropzone.processQueue();
+            }
+        });
+
+        function showNotification(title, message, type, icon) {
+            $.notify({
+                title: title + ' : ',
+                message: message,
+                icon: 'fa ' + icon
+            }, {
+                type: type,
+                allow_dismiss: true,
+                placement: {
+                    from: "top",
+                    align: "right"
+                },
+            });
+        }
+
     });
 </script>
+
 @endsection
