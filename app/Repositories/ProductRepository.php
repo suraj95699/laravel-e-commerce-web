@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\Product;
@@ -48,12 +49,10 @@ class ProductRepository extends BaseRepository implements ProductContract
     {
         try {
             return $this->findOneOrFail($id);
-
         } catch (ModelNotFoundException $e) {
 
             throw new ModelNotFoundException($e);
         }
-
     }
 
     /**
@@ -78,7 +77,6 @@ class ProductRepository extends BaseRepository implements ProductContract
                 $product->categories()->sync($params['categories']);
             }
             return $product;
-
         } catch (QueryException $exception) {
             throw new InvalidArgumentException($exception->getMessage());
         }
@@ -98,10 +96,11 @@ class ProductRepository extends BaseRepository implements ProductContract
         $status = $collection->has('status') ? 1 : 0;
 
         $merge = $collection->merge(compact('status', 'featured'));
-
+        // dd($merge->all());
         $product->update($merge->all());
 
         if ($collection->has('categories')) {
+            // dd($params['categories']);
             $product->categories()->sync($params['categories']);
         }
 
