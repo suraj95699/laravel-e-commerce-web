@@ -1,24 +1,4 @@
-@extends('admin.app')
-@section('title') {{ $pageTitle }} @endsection
-@section('content')
-<div class="app-title">
-    <div>
-        <h1><i class="fa fa-cogs"></i> {{ $pageTitle }}</h1>
-    </div>
-</div>
-@include('admin.partials.flash')
-<div class="row user">
-    <div class="col-md-3">
-        <div class="tile p-0">
-            <div class="" role="" aria-label="">
-                <a href="{{route('admin.attributes.edit', $attribute->id) }}" class="nav-link ">General</i></a>
-                <a href="{{ route('admin.attributes.getvalues', $attribute->id)  }}" class="nav-link ">Attribute Values</a>
-            </div>
-        </div>
 
-    </div>
-    <div class="col-md-9">
-        <div class="tab-content">
             <div class="tab-pane active" id="general">
                 <div class="tile">
                     <form action="{{ route('admin.attributes.update') }}" method="POST" role="form">
@@ -74,10 +54,4 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-@endsection
-@section('scripts')
-<!-- <script src="{{ asset('backend/js/app.js') }}"></script> -->
-@endsection
+        
