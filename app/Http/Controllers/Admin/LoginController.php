@@ -19,6 +19,7 @@ class LoginController extends Controller
      *
      * @var string
      */
+    
     protected $redirectTo = '/admin';
 
     /**
@@ -28,17 +29,9 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        
         $this->middleware('guest:admin')->except('logout');
     }
-
-
-
-    public function index()
-    {
-
-        return view('admin.dashboard.index');
-    }
-
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
