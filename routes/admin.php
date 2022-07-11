@@ -6,9 +6,10 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
+use App\Http\Controllers\Admin\BrandController;
 
 
-Route::redirect("/","admin/login");
+Route::redirect("/", "admin/login");
 Route::group(['prefix'  =>  'admin'], function () {
 
 
@@ -19,8 +20,12 @@ Route::group(['prefix'  =>  'admin'], function () {
     Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
 
     Route::group(['middleware' => ['auth:admin']], function () {
-        Route::get("/",function(){return view("admin.dashboard.index");})->name("admin.dashboard");;
-        Route::get("/dashboard",function(){return view("admin.dashboard.index");})->name("admin.dashboard");;
+        Route::get("/", function () {
+            return view("admin.dashboard.index");
+        })->name("admin.dashboard");;
+        Route::get("/dashboard", function () {
+            return view("admin.dashboard.index");
+        })->name("admin.dashboard");;
         Route::get('settings', [SettingController::class, 'index'])->name('admin.settings');
         Route::post('settings', [SettingController::class, 'update'])->name('admin.settings.update');
 
@@ -46,6 +51,22 @@ Route::group(['prefix'  =>  'admin'], function () {
             Route::get('/{id}/editValues', [AttributeValueController::class, 'editValues'])->name('admin.attributes.editValues');
             Route::post('/updateValues', [AttributeValueController::class, 'updateValues'])->name('admin.attributes.updateValues');;
             Route::get('/{id}/deleteValues/{attribute_id?}', [AttributeValueController::class, 'deleteValues'])->name('admin.attributes.deleteValues');
+        });
+
+        Route::group(['prefix'  =>   'brands'], function () {
+            Route::get('/', [BrandController::class, 'index'])->name('admin.brands.index');
+            Route::get('/create', [BrandController::class, 'create'])->name('admin.brands.create');
+            Route::post('/store', [BrandController::class, 'store'])->name('admin.brands.store');
+            Route::get('/{id}/edit', [BrandController::class, 'edit'])->name('admin.brands.edit');
+            Route::post('/update', [BrandController::class, 'update'])->name('admin.brands.update');
+            Route::get('/{id}/delete', [BrandController::class, 'delete'])->name('admin.brands.delete');
+
+            // Route::get('/', 'Admin\BrandController@index')->name('admin.brands.index');
+            // Route::get('/create', 'Admin\BrandController@create')->name('admin.brands.create');
+            // Route::post('/store', 'Admin\BrandController@store')->name('admin.brands.store');
+            // Route::get('/{id}/edit', 'Admin\BrandController@edit')->name('admin.brands.edit');
+            // Route::post('/update', 'Admin\BrandController@update')->name('admin.brands.update');
+            // Route::get('/{id}/delete', 'Admin\BrandController@delete')->name('admin.brands.delete');
         });
     });
 });
