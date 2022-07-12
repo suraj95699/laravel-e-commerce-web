@@ -29,7 +29,7 @@ class AlterProductAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::create('product_attributes', function (Blueprint $table) {
+        Schema::table('product_attributes', function (Blueprint $table) {
             $table->dropColumn('value');
         });
     }

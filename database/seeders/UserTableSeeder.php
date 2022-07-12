@@ -15,12 +15,6 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
-
-        User::create([
-            'name'      =>  $faker->name,
-            'email'     =>  'user@user.com',
-            'password'  =>  bcrypt('password'),
-        ]);
+      return;
     }
 }
