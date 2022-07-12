@@ -9,6 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/main.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/font-awesome/4.7.0/css/font-awesome.min.css') }}" />
+    <style>
+        .required_sign {
+            color: red;
+            font-size: 20px;
+            top: auto;
+        }
+    </style>
     @yield('styles')
 </head>
 

@@ -7,7 +7,11 @@ use App\Http\Controllers\BaseController;
 use App\Contracts\BrandContract;
 use App\Contracts\CategoryContract;
 use App\Contracts\ProductContract;
+use App\Contracts\AttributeContract;
+use App\Models\ProductAttribute;
+use App\Models\AttributeValue;
 use App\Http\Requests\StoreProductFormRequest;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends BaseController
 {
@@ -21,11 +25,15 @@ class ProductController extends BaseController
     public function __construct(
         BrandContract $brandRepository,
         CategoryContract $categoryRepository,
-        ProductContract $productRepository
+        ProductContract $productRepository,
+        AttributeContract $attributeRepository,
+        ProductAttribute $ProductAttribute
     ) {
         $this->brandRepository = $brandRepository;
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->ProductAttribute = $ProductAttribute;
     }
 
 
@@ -59,14 +67,18 @@ class ProductController extends BaseController
         return $this->responseRedirect('admin.products.index', 'Product added successfully', 'success', false, false);
     }
 
+   
+
     public function edit($id)
     {
+        $attributes = $this->attributeRepository->listAttributes();
         $product = $this->productRepository->findProductById($id);
         $brands = $this->brandRepository->listBrands('name', 'asc');
         $categories = $this->categoryRepository->listCategories('name', 'asc');
-
+        $productValues = AttributeValue::pluck('value','id');
+        $productAttributes = ProductAttribute::where('product_id',$id)->get();
         $this->setPageTitle('Products', 'Edit Product');
-        return view('admin.products.edit', compact('categories', 'brands', 'product'));
+        return view('admin.products.edit', compact('categories', 'brands', 'product','attributes','productAttributes','productValues'));
     }
 
     public function update(StoreProductFormRequest $request)

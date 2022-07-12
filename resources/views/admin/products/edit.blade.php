@@ -1,11 +1,9 @@
 @extends('admin.app')
 @section('title') {{ $pageTitle }} @endsection
 @section('styles')
-<!-- <link rel="stylesheet" type="text/css" href="{{ asset('backend/js/plugins/dropzone/dist/min/dropzone.min.css') }}" /> -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/basic.min.css" integrity="sha512-MeagJSJBgWB9n+Sggsr/vKMRFJWs+OUphiDV7TJiYu+TNQD9RtVJaPDYP8hA/PAjwRnkdvU+NsTncYTKlltgiw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/dropzone.min.css" integrity="sha512-qkeymXyips4Xo5rbFhX+IDuWMDEmSn7Qo7KpPMmZ1BmuIA95IPVYsVZNn8n4NH/N30EY7PUZS3gTeTPoAGo1mA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
-
 @section('content')
 <div class="app-title">
     <div>
@@ -19,6 +17,7 @@
             <ul class="nav flex-column nav-tabs user-tabs">
                 <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
                 <li class="nav-item"><a class="nav-link" href="#images" data-toggle="tab">Images</a></li>
+                <li class="nav-item"><a class="nav-link" href="#attribute" data-toggle="tab">Attribute</a></li>
             </ul>
         </div>
     </div>
@@ -191,8 +190,103 @@
                 </div>
             </div>
             <!-- end of image section -->
+
+
+
+            <!-- Starts of Attribute section -->
+            <div class="tab-pane" id="attribute">
+                <div class="tile">
+                    <div class="tile-body">
+                        <div class="form-group">
+                            <label class="control-label" for="value">Value <sup class="required_sign">*</sup></label>
+                            <select class="select2dropdown" id="attributeDropdown" style="width: 100%;">
+                                <option value="">--Select--</option>
+                                @foreach($attributes as $attribute)
+                                <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile selectAddAttributes" style="display:none;">
+                    <form action="{{ route('admin.products.addAttribute') }}" method="POST" role="form">
+                        @csrf
+                        <input type="hidden" value="{{ $product->id }}" id="product_id" name="product_id" />
+                        <input type="hidden" value="" id="attribute_id" name="attribute_id" />
+                        <div class="tile-body">
+                            <div class="form-group selectAddAttributes">
+                                <label class="control-label" for="value">Select value<sup class="required_sign">*</sup></label>
+                                <select class="select2dropdown" id="addAttribute" style="width: 100%;" name="value">
+                                </select>
+                            </div>
+                            <div class="row quantityPrice" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="quantity">Quantity</label>
+                                        <input class="form-control" type="number" placeholder="Enter product quantity" id="quantity" name="quantity" value="" min="0" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="price">Price</label>
+                                        <input class="form-control" type="number" placeholder="Enter product price" id="price" name="price" value="" min="0" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-sm btn-primary" type="submit"> <i class="fa fa-plus"></i>Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- product attribute template starts  -->
+                <div class="tile">
+                    <h3 class="tile-title">Product Attributes</h3>
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Value</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach( $productAttributes as $productAttribute)
+                                    <tr>
+                                        <td style="width: 25%" class="text-center">{{ $productValues[$productAttribute->value] }}</td>
+                                        <td style="width: 25%" class="text-center">{{ $productAttribute->quantity }}</td>
+                                        <td style="width: 25%" class="text-center">{{ $productAttribute->price }}</td>
+                                        <td style="width: 25%" class="text-center">
+                                            <a class="btn btn-sm btn-danger" onClick="return confirm('Are you Sure?')" href="{{ route('admin.products.deleteAttribute',$productAttribute->id); }}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- product attribute template ends  -->
+
+            </div>
+
+
         </div>
+        <!-- End of Attribute section -->
+
+
+
+
+
     </div>
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -202,6 +296,14 @@
 <script type="text/javascript" src="{{ asset('backend/js/plugins/bootstrap-notify.min.js') }}"></script>
 <script>
     $(document).ready(function() {
+
+            $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
+            });
+            var activeTab = localStorage.getItem('activeTab');
+            if (activeTab) {
+                $('a[href="' + activeTab + '"]').tab('show');
+            }
         Dropzone.autoDiscover = false;
         $('#categories').select2();
 
@@ -241,6 +343,45 @@
                 },
             });
         }
+
+
+        $('.select2dropdown').select2();
+        $('#attributeDropdown').change(function() {
+            $('.selectAddAttributes').css("display", "block");
+            let attrId = $(this).val();
+            $('#attribute_id').val(attrId);
+            let route = "{{ route('admin.products.getAttibuteOptionsJson') }}";
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: route,
+                data: {
+                    'id': attrId
+                },
+                type: 'get',
+                success: function(reponse) {
+                    $('#addAttribute').html("");
+                    $('#addAttribute').append('<option value="">--Select--</option>');
+                    for (let i = 0; i < reponse.length; i++) {
+                        console.log(reponse[i]['value']);
+                        var option = document.createElement("option");
+                        option.text = reponse[i]['value'];
+                        option.value = reponse[i]['id'];
+                        option.setAttribute("attributeid", reponse[i]['attribute_id']);
+
+                        $('#addAttribute').append(option);
+
+                    }
+                    $(".select2dropdown").select2();
+                }
+            });
+            return false;
+        });
+
+        $('.selectAddAttributes').change(function() {
+            $('.quantityPrice').css("display", "flex");
+        })
 
     });
 </script>

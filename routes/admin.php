@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\Admin\ProductAttributeController;
 
 
 Route::redirect("/", "admin/login");
@@ -70,6 +71,9 @@ Route::group(['prefix'  =>  'admin'], function () {
             Route::post('/store', [ProductController::class, 'store'])->name('admin.products.store');
             Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
             Route::post('/update', [ProductController::class, 'update'])->name('admin.products.update');
+            Route::get('/getAttibuteOptionsJson', [ProductAttributeController::class, 'getAttibuteOptionsJson'])->name('admin.products.getAttibuteOptionsJson');
+            Route::post('/attributes/add', [ProductAttributeController::class, 'addAttribute'])->name('admin.products.addAttribute');
+            Route::get('/attributes/delete{id?}', [ProductAttributeController::class, 'deleteAttribute'])->name('admin.products.deleteAttribute');
 
             Route::post('/images/upload', [ProductImageController::class, 'upload'])->name('admin.products.images.upload');
             Route::get('/images/{id}/delete', [ProductImageController::class, 'delete'])->name('admin.products.images.delete');
